@@ -49,7 +49,12 @@ export default function LoginPage() {
       router.push("/dashboard");
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } } };
-      toast.error(error?.response?.data?.message || "Invalid credentials");
+      toast.error(
+        error?.response?.data?.message ||
+          (error?.response
+            ? "An unexpected error occurred"
+            : "Connection timeout. The database is waking up. Please try again in 5 seconds.")
+      );
     }
   };
 

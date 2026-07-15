@@ -10,6 +10,8 @@ import React, {
 import { AuthUser } from "@/types";
 import { authApi } from "@/lib/api";
 
+import { queryClient } from "@/lib/queryClient";
+
 interface AuthContextType {
   user: AuthUser | null;
   isLoading: boolean;
@@ -76,6 +78,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       localStorage.removeItem("token");
       setUser(null);
+      queryClient.clear();
     }
   };
 

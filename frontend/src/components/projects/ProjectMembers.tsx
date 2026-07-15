@@ -23,7 +23,7 @@ interface ProjectMembersProps {
 }
 
 export function ProjectMembers({ project, canManage }: ProjectMembersProps) {
-  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [selectedUserId, setSelectedUserId] = useState<string>("");
   const { data: allUsers } = useUsers();
   const addMember = useAddProjectMember();
   const removeMember = useRemoveProjectMember();
@@ -33,8 +33,13 @@ export function ProjectMembers({ project, canManage }: ProjectMembersProps) {
 
   const handleAdd = async () => {
     if (!selectedUserId) return;
-    await addMember.mutateAsync({ projectId: project.id, userId: selectedUserId });
-    setSelectedUserId(null);
+    const userId = selectedUserId;
+    setSelectedUserId("");
+    try {
+      await addMember.mutateAsync({ projectId: project.id, userId });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -42,7 +47,7 @@ export function ProjectMembers({ project, canManage }: ProjectMembersProps) {
       {/* Add member */}
       {canManage && (
         <div className="flex gap-2">
-          <Select value={selectedUserId} onValueChange={setSelectedUserId}>
+          <Select value={selectedUserId || undefined} onValueChange={setSelectedUserId}>
             <SelectTrigger className="flex-1">
               <SelectValue placeholder="Select a user to add..." />
             </SelectTrigger>
