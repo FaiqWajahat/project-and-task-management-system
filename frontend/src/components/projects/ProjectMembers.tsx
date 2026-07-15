@@ -23,7 +23,7 @@ interface ProjectMembersProps {
 }
 
 export function ProjectMembers({ project, canManage }: ProjectMembersProps) {
-  const [selectedUserId, setSelectedUserId] = useState<string>("");
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const { data: allUsers } = useUsers();
   const addMember = useAddProjectMember();
   const removeMember = useRemoveProjectMember();
@@ -34,7 +34,7 @@ export function ProjectMembers({ project, canManage }: ProjectMembersProps) {
   const handleAdd = async () => {
     if (!selectedUserId) return;
     const userId = selectedUserId;
-    setSelectedUserId("");
+    setSelectedUserId(null);
     try {
       await addMember.mutateAsync({ projectId: project.id, userId });
     } catch (err) {
