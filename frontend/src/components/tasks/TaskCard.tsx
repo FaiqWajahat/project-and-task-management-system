@@ -67,6 +67,7 @@ export function TaskCard({ task, draggable = false }: TaskCardProps) {
 
   const priority = priorityConfig[task.priority];
   const status = statusConfig[task.status];
+  const isPending = updateTask.isPending || deleteTask.isPending;
 
   return (
     <>
@@ -80,10 +81,18 @@ export function TaskCard({ task, draggable = false }: TaskCardProps) {
       >
         <Card
           className={cn(
-            "group border-border/50 hover:border-border transition-colors",
-            draggable && "cursor-grab active:cursor-grabbing"
+            "group border-border/50 hover:border-border transition-colors relative overflow-hidden",
+            draggable && "cursor-grab active:cursor-grabbing",
+            isPending && "opacity-50 pointer-events-none"
           )}
         >
+          {isPending && (
+            <div className="absolute inset-0 bg-background/40 backdrop-blur-[1px] flex items-center justify-center z-10">
+              <span className="text-xs font-semibold text-muted-foreground animate-pulse">
+                {deleteTask.isPending ? "Deleting..." : "Updating..."}
+              </span>
+            </div>
+          )}
           <CardContent className="p-4 space-y-3">
             {/* Header: title + actions */}
             <div className="flex items-start justify-between gap-2">

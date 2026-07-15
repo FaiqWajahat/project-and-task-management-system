@@ -142,15 +142,23 @@ export function UserTable({ users }: UserTableProps) {
             </thead>
             <tbody>
               <AnimatePresence>
-                {filtered.map((user, i) => (
-                  <motion.tr
-                    key={user.id}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ delay: i * 0.03 }}
-                    className="border-b border-border/30 hover:bg-muted/30 transition-colors"
-                  >
+                {filtered.map((user, i) => {
+                  const isRowPending =
+                    (updateUser.isPending && updateUser.variables?.id === user.id) ||
+                    (deleteUser.isPending && deleteUser.variables === user.id);
+
+                  return (
+                    <motion.tr
+                      key={user.id}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ delay: i * 0.03 }}
+                      className={cn(
+                        "border-b border-border/30 hover:bg-muted/30 transition-colors",
+                        isRowPending && "opacity-40 pointer-events-none"
+                      )}
+                    >
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         <Avatar className="h-8 w-8">
@@ -204,7 +212,8 @@ export function UserTable({ users }: UserTableProps) {
                       </DropdownMenu>
                     </td>
                   </motion.tr>
-                ))}
+                );
+              })}
               </AnimatePresence>
             </tbody>
           </table>

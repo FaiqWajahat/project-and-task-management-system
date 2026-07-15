@@ -46,14 +46,9 @@ export function useCreateTask() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data: CreateTaskPayload) => tasksApi.create(data),
-    onSuccess: (_, vars) => {
-      queryClient.invalidateQueries({ queryKey: TASK_KEYS.all });
-      queryClient.invalidateQueries({
-        queryKey: TASK_KEYS.byProject(vars.projectId),
-      });
-      queryClient.invalidateQueries({
-        queryKey: PROJECT_KEYS.detail(vars.projectId),
-      });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
       toast.success("Task created successfully");
     },
     onError: (err: unknown) => {
@@ -69,8 +64,8 @@ export function useUpdateTask() {
     mutationFn: ({ id, data }: { id: string; data: UpdateTaskPayload }) =>
       tasksApi.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: TASK_KEYS.all });
-      queryClient.invalidateQueries({ queryKey: TASK_KEYS.my });
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
       toast.success("Task updated");
     },
     onError: (err: unknown) => {
@@ -85,8 +80,8 @@ export function useDeleteTask() {
   return useMutation({
     mutationFn: (id: string) => tasksApi.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: TASK_KEYS.all });
-      queryClient.invalidateQueries({ queryKey: TASK_KEYS.my });
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
       toast.success("Task deleted");
     },
     onError: (err: unknown) => {

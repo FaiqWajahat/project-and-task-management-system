@@ -19,19 +19,28 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { getInitials, getAvatarGradient, cn } from "@/lib/utils";
 
+import { useProject } from "@/hooks/useProjects";
+
 interface NavbarProps {
   onMenuClick: () => void;
 }
 
 function Breadcrumbs() {
   const pathname = usePathname();
+  const match = pathname.match(/^\/projects\/([^\/]+)/);
+  const projectId = match ? match[1] : "";
+  const { data: project } = useProject(projectId);
+
   const segments = pathname
     .split("/")
     .filter(Boolean)
-    .map((seg) => ({
-      label: seg.charAt(0).toUpperCase() + seg.slice(1).replace(/-/g, " "),
-      href: "/" + seg,
-    }));
+    .map((seg) => {
+      const isId = seg === projectId;
+      return {
+        label: isId && project ? project.name : seg.charAt(0).toUpperCase() + seg.slice(1).replace(/-/g, " "),
+        href: "/" + seg,
+      };
+    });
 
   return (
     <nav className="hidden md:flex items-center gap-1 text-sm text-muted-foreground">
