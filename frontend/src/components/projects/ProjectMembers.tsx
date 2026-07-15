@@ -42,6 +42,8 @@ export function ProjectMembers({ project, canManage }: ProjectMembersProps) {
     }
   };
 
+  const selectedUser = allUsers?.find((u) => u.id === selectedUserId);
+
   return (
     <div className="space-y-4">
       {/* Add member */}
@@ -49,7 +51,11 @@ export function ProjectMembers({ project, canManage }: ProjectMembersProps) {
         <div className="flex gap-2">
           <Select value={selectedUserId || undefined} onValueChange={setSelectedUserId}>
             <SelectTrigger className="flex-1">
-              <SelectValue placeholder="Select a user to add..." />
+              <SelectValue placeholder="Select a user to add...">
+                {selectedUser
+                  ? `${selectedUser.name} (${selectedUser.role.toLowerCase()})`
+                  : undefined}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               {availableUsers.map((u) => (
