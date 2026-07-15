@@ -149,8 +149,10 @@ function SidebarContent({
                 ? "/admin"
                 : item.href;
             const isActive =
-              pathname === resolvedHref ||
-              pathname.startsWith(resolvedHref + "/");
+              resolvedHref === "/admin"
+                ? pathname === "/admin"
+                : pathname === resolvedHref ||
+                  pathname.startsWith(resolvedHref + "/");
             return (
               <Link
                 key={item.href}
