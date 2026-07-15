@@ -144,12 +144,17 @@ function SidebarContent({
           )}
         >
           {filteredItems.map((item) => {
+            const resolvedHref =
+              item.href === "/dashboard" && user?.role === "ADMIN"
+                ? "/admin"
+                : item.href;
             const isActive =
-              pathname === item.href || pathname.startsWith(item.href + "/");
+              pathname === resolvedHref ||
+              pathname.startsWith(resolvedHref + "/");
             return (
               <Link
                 key={item.href}
-                href={item.href}
+                href={resolvedHref}
                 className={cn(
                   "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 w-full",
                   isActive
